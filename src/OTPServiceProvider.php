@@ -1,8 +1,8 @@
 <?php
 
-namespace tpaksu\LaravelOTPLogin;
+namespace adeshsuryan\LaravelOTPLogin;
 
-use tpaksu\LaravelOTPLogin\LoginMiddleware;
+use adeshsuryan\LaravelOTPLogin\LoginMiddleware;
 
 class OTPServiceProvider extends \Illuminate\Support\ServiceProvider
 {

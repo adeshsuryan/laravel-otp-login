@@ -1,14 +1,14 @@
 <?php
 
-namespace tpaksu\LaravelOTPLogin\Services;
+namespace adeshsuryan\LaravelOTPLogin\Services;
 
 use App\User;
-use tpaksu\LaravelOTPLogin\ServiceInterface;
+use adeshsuryan\LaravelOTPLogin\ServiceInterface;
 
 /**
  * Nexmo SMS service handler
  *
- * @namespace tpaksu\LaravelOTPLogin\Services
+ * @namespace adeshsuryan\LaravelOTPLogin\Services
  */
 class Nexmo implements ServiceInterface
 {

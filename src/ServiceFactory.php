@@ -1,7 +1,7 @@
 <?php
-namespace tpaksu\LaravelOTPLogin;
+namespace adeshsuryan\LaravelOTPLogin;
 
-use tpaksu\LaravelOTPLogin\Services;
+use adeshsuryan\LaravelOTPLogin\Services;
 
 class ServiceFactory
 {

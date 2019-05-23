@@ -1,6 +1,6 @@
 <?php
 
-namespace tpaksu\LaravelOTPLogin;
+namespace adeshsuryan\LaravelOTPLogin;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
