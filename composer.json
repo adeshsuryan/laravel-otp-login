@@ -1,22 +1,22 @@
 {
-    "name": "tpaksu/laravel-otp-login",
+    "name": "adeshsuryan/laravel-otp-login",
     "description": "Adds OTP login step to Laravel's built-in authentication system",
     "license": "MIT",
     "authors": [
         {
-            "name": "Taha PAKSU",
-            "email": "tpaksu@gmail.com"
+            "name": "adesh kumar",
+            "email": "adeshsuryan2005@gmail.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "tpaksu\\LaravelOTPLogin\\": "src/"
+            "adeshsuryan\\LaravelOTPLogin\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "tpaksu\\LaravelOTPLogin\\OTPServiceProvider"
+                "adeshsuryan\\LaravelOTPLogin\\OTPServiceProvider"
             ]
         }
     }

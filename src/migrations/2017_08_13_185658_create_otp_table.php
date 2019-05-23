@@ -21,7 +21,7 @@ class CreateOtpTable extends Migration
         });
 
         Schema::table('one_time_passwords', function (Blueprint $table) {
-            $table->foreign('user_id') ->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id') ->references('id')->on('learners')->onDelete('cascade');
         });
     }
 

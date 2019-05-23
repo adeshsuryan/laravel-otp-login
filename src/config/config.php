@@ -4,19 +4,19 @@ return [
     'otp_default_service' => env("OTP_SERVICE", "nexmo"),
     'services' => [
         'biotekno' => [
-            "class" => \tpaksu\LaravelOTPLogin\Services\BioTekno::class,
+            "class" => \adeshsuryan\LaravelOTPLogin\Services\BioTekno::class,
             "username" => env('OTP_USERNAME', null),
             "password" => env('OTP_PASSWORD', null),
             "transmission_id" => env('OTP_TRANSMISSION_ID', null)
         ],
         'nexmo' => [
-            'class' => \tpaksu\LaravelOTPLogin\Services\Nexmo::class,
+            'class' => \adeshsuryan\LaravelOTPLogin\Services\Nexmo::class,
             'api_key' => env("OTP_API_KEY", null),
             'api_secret' => env('OTP_API_SECRET', null),
             'from' => env('OTP_FROM', null)
         ],
         'twilio' => [
-            'class' => \tpaksu\LaravelOTPLogin\Services\Twilio::class,
+            'class' => \adeshsuryan\LaravelOTPLogin\Services\Twilio::class,
             'account_sid' => env("OTP_ACCOUNT_SID", null),
             'auth_token' => env("OTP_AUTH_TOKEN", null),
             'from' => env("OTP_FROM", null)

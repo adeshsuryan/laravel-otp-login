@@ -1,6 +1,4 @@
 # Laravel OTP Login Package
-[![Total Downloads](https://poser.pugx.org/tpaksu/laravel-otp-login/downloads.png)](https://packagist.org/packages/tpaksu/laravel-otp-login) [![Latest Stable Version](https://poser.pugx.org/tpaksu/laravel-otp-login/v/stable.png)](https://packagist.org/packages/tpaksu/laravel-otp-login) [![HitCount](http://hits.dwyl.com/tpaksu/laravel-otp-login.svg)](http://hits.dwyl.com/tpaksu/laravel-otp-login) [![](https://img.shields.io/github/languages/code-size/badges/shields.svg)](https://github.com/tpaksu/laravel-otp-login) [![](https://img.shields.io/packagist/l/tpaksu/laravel-otp-login.svg)](https://github.com/tpaksu/laravel-otp-login)
-
 
 This package provides an One Time Password check step after successful login using the default authentication mechanism. The package stores all requested OTP and it's validation statuses in `one_time_passwords` and `one_time_password_logs` tables.
 
@@ -8,7 +6,7 @@ It uses the middleware included in this package to check if the user has passed 
 
 ## Credits
 
-This package is based on the idea of [nattaponra/laravel-one-time-password](https://github.com/nattaponra/laravel-one-time-password) package. The middleware, translations, views, the controller, routes and extending the services strategy is developed by me.
+This package is based on the idea of [tpaksu/laravel-otp-login](https://github.com/tpaksu/laravel-otp-login) package. The Rest API with controller strategy is developed by me.
 
 ## Requirements
 
@@ -21,28 +19,28 @@ This package is based on the idea of [nattaponra/laravel-one-time-password](http
 You can install this package on an existing Laravel project with using composer:
 
 ```bash
- $ composer require tpaksu/laravel-otp-login
+ $ composer require adeshsuryan/laravel-otp-login
 ```
 
 Then, register the OTP Login ServiceProvider editing **config/app.php** file and adding to providers array:
 
 ```php
-  tpaksu\LaravelOTPLogin\OTPServiceProvider::class,
+  adeshsuryan\LaravelOTPLogin\OTPServiceProvider::class,
 ```
 
 Note: use the following for Laravel <5.1 versions:
 
 ```php
- 'tpaksu\LaravelOTPLogin\OTPServiceProvider',
+ 'adeshsuryan\LaravelOTPLogin\OTPServiceProvider',
 ```
 
 Publish files with:
 
 ```bash
- $ php artisan vendor:publish --provider="tpaksu\LaravelOTPLogin\OTPServiceProvider"
+ $ php artisan vendor:publish --provider="adeshsuryan\LaravelOTPLogin\OTPServiceProvider"
 ```
 
-or by using only `php artisan vendor:publish` and select the `tpaksu\LaravelOTPLogin\OTPServiceProvider` from the outputted list.
+or by using only `php artisan vendor:publish` and select the `adeshsuryan\LaravelOTPLogin\OTPServiceProvider` from the outputted list.
 
 Apply the migrations for the `OneTimePassword` and `OneTimePasswordLogs` tables:
 
@@ -71,19 +69,19 @@ The services predefined in this package are `Nexmo`, `Twilio` and `BioTekno` for
 ```php
 'services' => [
     'biotekno' => [
-        "class" => \tpaksu\LaravelOTPLogin\Services\BioTekno::class,
+        "class" => \adeshsuryan\LaravelOTPLogin\Services\BioTekno::class,
         "username" => env('OTP_USERNAME', null),
         "password" => env('OTP_PASSWORD', null),
         "transmission_id" => env('OTP_TRANSMISSION_ID', null)
     ],
     'nexmo' => [
-        'class' => \tpaksu\LaravelOTPLogin\Services\Nexmo::class,
+        'class' => \adeshsuryan\LaravelOTPLogin\Services\Nexmo::class,
         'api_key' => env("OTP_API_KEY", null),
         'api_secret' => env('OTP_API_SECRET', null),
         'from' => env('OTP_FROM', null)
     ],
     'twilio' => [
-        'class' => \tpaksu\LaravelOTPLogin\Services\Twilio::class,
+        'class' => \adeshsuryan\LaravelOTPLogin\Services\Twilio::class,
         'account_sid' => env("OTP_ACCOUNT_SID", null),
         'auth_token' => env("OTP_AUTH_TOKEN", null),
         'from' => env("OTP_FROM", null)
@@ -151,11 +149,11 @@ This package publishes the translations to `resources/lang/vendor/laravel-otp-lo
 
 #### BioTekno
 
-[BioTekno](http://www.biotekno.com.tr/en/) was the initial service that I used to develop this package for my company, so I decided to leave it here. The service uses a `GET` request to send SMS and requires username/password combination with a transmission ID which is used as the name displayed instead the phone number on it's customer's mobile device. It uses `tpaksu\LaravelOTPLogin\Services\BioTekno` class to send the message.
+[BioTekno](http://www.biotekno.com.tr/en/) was the initial service that I used to develop this package for my company, so I decided to leave it here. The service uses a `GET` request to send SMS and requires username/password combination with a transmission ID which is used as the name displayed instead the phone number on it's customer's mobile device. It uses `adeshsuryan\LaravelOTPLogin\Services\BioTekno` class to send the message.
 
 ```php
     'biotekno' => [
-        "class" => \tpaksu\LaravelOTPLogin\Services\BioTekno::class,
+        "class" => \adeshsuryan\LaravelOTPLogin\Services\BioTekno::class,
         "username" => env('OTP_USERNAME', null),
         "password" => env('OTP_PASSWORD', null),
         "transmission_id" => env('OTP_TRANSMISSION_ID', null)
@@ -166,12 +164,12 @@ This package publishes the translations to `resources/lang/vendor/laravel-otp-lo
 
 [Nexmo](https://www.nexmo.com/) seemed to be one of the popular messaging service, as I'm not much familiar with SMS services before, but It has an easy API to work with, so I decided to implement it inside this package. It has it's own composer package to use in Laravel or another PHP system, but since I was only interested in sending SMS, I directly implemented their REST API solution in this package.
 
-The service provides you with an `api_key` and an `api_secret` as common API authentication parameters, but you will also require a phone number (again, provided by Nexmo) to use as a sender address. And this parameters will be enough to configure the service. It uses `tpaksu\LaravelOTPLogin\Services\Nexmo` class to send the message.
+The service provides you with an `api_key` and an `api_secret` as common API authentication parameters, but you will also require a phone number (again, provided by Nexmo) to use as a sender address. And this parameters will be enough to configure the service. It uses `adeshsuryan\LaravelOTPLogin\Services\Nexmo` class to send the message.
 
 
 ```php
     'nexmo' => [
-        'class' => \tpaksu\LaravelOTPLogin\Services\Nexmo::class,
+        'class' => \adeshsuryan\LaravelOTPLogin\Services\Nexmo::class,
         'api_key' => env("OTP_API_KEY", null),
         'api_secret' => env('OTP_API_SECRET', null),
         'from' => env('OTP_FROM', null)
@@ -179,13 +177,13 @@ The service provides you with an `api_key` and an `api_secret` as common API aut
 ```
 
 #### Twilio
-[Twilio](https://www.twilio.com) is also one of the most popular messaging service, providing also voice calls, social messging and video calls besides SMS messaging. And also has it's own libraries that can be used on several PHP based frameworks/software like Laravel, but I still choose the easy way and implemented only the REST API style of sending messages. If you look at the source of `tpaksu\LaravelOTPLogin\Services\Twilio`, you'll understand.
+[Twilio](https://www.twilio.com) is also one of the most popular messaging service, providing also voice calls, social messging and video calls besides SMS messaging. And also has it's own libraries that can be used on several PHP based frameworks/software like Laravel, but I still choose the easy way and implemented only the REST API style of sending messages. If you look at the source of `adeshsuryan\LaravelOTPLogin\Services\Twilio`, you'll understand.
 
 The Twilio service provides you an `account_sid` , an `auth_token` on it's console after you finish the registration and create a SMS project. Then you'll need a phone number like Nexmo to send an SMS using these information to your "verified" numbers. And you also need to enable the country on the console you wish to send messages to. Otherwise you'll get an error saying that the country is not permitted to send the SMS to. To the `from` config parameter, you need to fill in the phone number you've got from the service.
 
 ```php
     'twilio' => [
-        'class' => \tpaksu\LaravelOTPLogin\Services\Twilio::class,
+        'class' => \adeshsuryan\LaravelOTPLogin\Services\Twilio::class,
         'account_sid' => env("OTP_ACCOUNT_SID", null),
         'auth_token' => env("OTP_AUTH_TOKEN", null),
         'from' => env("OTP_FROM", null)
@@ -201,7 +199,7 @@ The service classes have this structure:
 
 // the package namespace, you won't be using it
 // because you'll generate your service in the App\OTPService directory
-namespace tpaksu\LaravelOTPLogin\Services;
+namespace adeshsuryan\LaravelOTPLogin\Services;
 
 // - OR if you are writing your service in App\OTPServices folder
 namespace App\OTPServices;
@@ -210,7 +208,7 @@ namespace App\OTPServices;
 use App\User;
 
 // this is a must.
-use tpaksu\LaravelOTPLogin\ServiceInterface;
+use adeshsuryan\LaravelOTPLogin\ServiceInterface;
 
 // the class name definition
 class MyMessagingService implements ServiceInterface
@@ -271,7 +269,7 @@ class MyMessagingService implements ServiceInterface
 
 ### Modifying existing services
 
-If you need to modify a service included in this package, you can check your `App\OTPServices` folder and you'll see a copy of each service class in this folder. Change the namespaces from `tpaksu\LaravelOTPLogin\Services` to `App\OTPServices` and in the configuration file, change the class path to the modified file. This will be enough to use the modified version of this class.
+If you need to modify a service included in this package, you can check your `App\OTPServices` folder and you'll see a copy of each service class in this folder. Change the namespaces from `adeshsuryan\LaravelOTPLogin\Services` to `App\OTPServices` and in the configuration file, change the class path to the modified file. This will be enough to use the modified version of this class.
 
 
 ## License
