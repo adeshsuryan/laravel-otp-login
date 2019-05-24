@@ -7,23 +7,46 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
+/**
+ * Class OneTimePassword
+ * @package adeshsuryan\LaravelOTPLogin
+ */
 class OneTimePassword extends Model
 {
+    /**
+     * @var array
+     */
     protected $fillable = ["user_id", "status"];
 
+    /**
+     * @var
+     */
+    protected $user;
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function oneTimePasswordLogs()
     {
         return $this->hasMany(OneTimePasswordLog::class, "user_id", "user_id");
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function user()
     {
         return $this->hasOne(User::class, "id", "user_id");
     }
 
-    public function send()
+    /**
+     * @param $user
+     * @return bool|null
+     */
+    public function send($user)
     {
-        $ref = $this->ReferenceNumber();
+        $this->user = $user;
+        $ref = $this->user->dialingcode.$this->user->phone;
 
         $otp = $this->createOTP($ref);
 
@@ -37,6 +60,12 @@ class OneTimePassword extends Model
         return null;
     }
 
+    /**
+     * @param $user
+     * @param $otp
+     * @param $ref
+     * @return bool
+     */
     private function sendOTPWithService($user, $otp, $ref)
     {
         $OTPFactory = new ServiceFactory();
@@ -50,6 +79,10 @@ class OneTimePassword extends Model
         return false;
     }
 
+    /**
+     * @param $ref
+     * @return bool|string
+     */
     public function createOTP($ref)
     {
         $this->discardOldPasswords();
@@ -73,18 +106,27 @@ class OneTimePassword extends Model
         return $otp;
     }
 
+    /**
+     * @return bool|string
+     */
     private function ReferenceNumber()
     {
         $number = strval(rand(100000000, 999999999));
         return substr($number, 0, config("otp.otp_reference_number_length", 4));
     }
 
+    /**
+     * @return bool|string
+     */
     private function OTPGenerator()
     {
         $number = strval(rand(100000000, 999999999));
         return substr($number, 0, config("otp.otp_digit_length", 4));
     }
 
+    /**
+     * @return int
+     */
     public function discardOldPasswords()
     {
         $this->update(["status" => "discarded"]);
@@ -92,6 +134,10 @@ class OneTimePassword extends Model
 
     }
 
+    /**
+     * @param $oneTimePassword
+     * @return bool
+     */
     public function checkPassword($oneTimePassword)
     {
         $oneTimePasswordLog = $this->oneTimePasswordLogs()
@@ -109,6 +155,9 @@ class OneTimePassword extends Model
         return false;
     }
 
+    /**
+     * @return int
+     */
     public function acceptEntrance()
     {
         $this->update(["status" => "verified"]);
@@ -117,6 +166,9 @@ class OneTimePassword extends Model
         return $this->oneTimePasswordLogs()->where("user_id", $this->user->id)->where("status", "waiting")->update(["status" => "verified"]);
     }
 
+    /**
+     * @return bool
+     */
     public function isExpired()
     {
         return $this->created_at < Carbon::now()->subSeconds(config("otp.otp_timeout"));

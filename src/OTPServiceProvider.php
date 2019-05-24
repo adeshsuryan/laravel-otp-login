@@ -4,6 +4,10 @@ namespace adeshsuryan\LaravelOTPLogin;
 
 use adeshsuryan\LaravelOTPLogin\LoginMiddleware;
 
+/**
+ * Class OTPServiceProvider
+ * @package adeshsuryan\LaravelOTPLogin
+ */
 class OTPServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**

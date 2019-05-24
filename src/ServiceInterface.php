@@ -3,6 +3,10 @@ namespace adeshsuryan\LaravelOTPLogin;
 
 use App\User;
 
+/**
+ * Interface ServiceInterface
+ * @package adeshsuryan\LaravelOTPLogin
+ */
 interface ServiceInterface
 {
     /**
