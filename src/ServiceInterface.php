@@ -13,5 +13,5 @@ interface ServiceInterface
      * @param string $ref : Reference Number to compare with
      * @return void
      */
-    public function sendOneTimePassword(User $user, $otp, $ref);
+    public function sendOneTimePassword($user, $otp, $ref);
 }
