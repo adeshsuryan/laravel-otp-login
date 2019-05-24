@@ -80,7 +80,7 @@ class Nexmo implements ServiceInterface
             $url = 'https://rest.nexmo.com/sms/json?' . http_build_query([
                 'api_key' => $this->api_key,
                 'api_secret' => $this->api_secret,
-                'to' => $user_phone,
+                'to' => $ref,
                 'from' => $this->from,
                 'text' => iconv("UTF-8", "ASCII//TRANSLIT", str_replace(":password", $otp, $this->message))
             ]);
