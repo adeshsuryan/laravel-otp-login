@@ -87,10 +87,8 @@ class Msg91 implements ServiceInterface
     {
         // extract the phone from the user
         $user_phone = data_get($user, $this->phone_column, false);
-
         // if the phone isn't set, return false
         if (!$user_phone) return false;
-
         try {
             // prepare the request url
             $url = 'https://control.msg91.com/api/sendhttp.php?' . http_build_query([
