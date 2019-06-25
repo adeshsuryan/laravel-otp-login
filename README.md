@@ -85,7 +85,14 @@ The services predefined in this package are `Nexmo`, `Twilio` and `BioTekno` for
         'account_sid' => env("OTP_ACCOUNT_SID", null),
         'auth_token' => env("OTP_AUTH_TOKEN", null),
         'from' => env("OTP_FROM", null)
-    ]
+    ],
+     'msg91' => [
+         'class' => \adeshsuryan\LaravelOTPLogin\Services\Msg91::class,
+         'api_key' => env("OTP_API_KEY", null),
+         'sender' => env('OTP_API_SENDER',null),
+         'route' => env('OTP_ROUTE', '4'),
+          'country' => env('OTP_COUNTRY', '0'),
+     ]
 ],
 ```
 

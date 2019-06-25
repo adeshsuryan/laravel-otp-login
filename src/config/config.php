@@ -23,8 +23,8 @@ return [
         ],
         'msg91' => [
             'class' => \adeshsuryan\LaravelOTPLogin\Services\Msg91::class,
-            'api_key' => env("OTP_API_KEY", 'a6ba0eea'),
-            'sender' => env('OTP_API_SENDER', '7HLYdLd4ChUvBhQt'),
+            'api_key' => env("OTP_API_KEY", null),
+            'sender' => env('OTP_API_SENDER',null),
             'route' => env('OTP_ROUTE', '4'),
             'country' => env('OTP_COUNTRY', '0'),
         ]
