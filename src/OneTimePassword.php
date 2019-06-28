@@ -151,11 +151,14 @@ class OneTimePassword extends Model
         return false;
     }
 
+
     /**
+     * @param $user
      * @return int
      */
-    public function acceptEntrance()
+    public function acceptEntrance($user)
     {
+        $this->user = $user;
         $this->update(["status" => "verified"]);
         $this->oneTimePasswordLogs()->where("status", "discarded")->delete();
         OneTimePassword::where(["status" => "discarded", "user_id" => $this->user->id])->delete();
