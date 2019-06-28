@@ -63,6 +63,11 @@ class Msg91 implements ServiceInterface
     const RESPONSE_TYPE = 'json';
 
     /**
+     * @var bool
+     */
+    protected $status = false;
+
+    /**
      * constructor
      */
     public function __construct()
@@ -85,10 +90,13 @@ class Msg91 implements ServiceInterface
      */
     public function sendOneTimePassword($user, $otp, $ref)
     {
+
         // extract the phone from the user
         $user_phone = data_get($user, $this->phone_column, false);
         // if the phone isn't set, return false
-        if (!$user_phone) return false;
+        if (!$user_phone) {
+            return false;
+        }
         try {
             // prepare the request url
             $url = 'https://control.msg91.com/api/sendhttp.php?' . http_build_query([
@@ -114,11 +122,13 @@ class Msg91 implements ServiceInterface
             // execute the request
             $response = curl_exec($ch);
 
+            $responseDecode = json_decode($response, true);
+            if (isset($responseDecode['type']) && $responseDecode['type'] == 'success') {
+                $this->status = true;
+            }
             // check if response contains the succeeded flag
-            return strpos($response, "\"code\": \"0\",") !== false;
-
+            return $this->status;
         } catch (\Exception $e) {
-
             // return false if any exception occurs
             return false;
         }
