@@ -2,7 +2,7 @@
 
 namespace adeshsuryan\LaravelOTPLogin;
 
-use adeshsuryan\LaravelOTPLogin\LoginMiddleware;
+//use adeshsuryan\LaravelOTPLogin\LoginMiddleware;
 
 /**
  * Class OTPServiceProvider
@@ -27,8 +27,9 @@ class OTPServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([__DIR__ . '/migrations' => database_path('migrations')], "migrations");
         $this->publishes([__DIR__ . '/services' => app_path('OtpServices')], "migrations");
         $this->publishes([__DIR__ . '/translations' => resource_path('lang/vendor/laravel-otp-login')]);
-
-        $this->app['router']->pushMiddlewareToGroup('web', LoginMiddleware::class);
-
+        /**
+         * Use Middleware if needed
+         * $this->app['router']->pushMiddlewareToGroup('web', LoginMiddleware::class);
+         */
     }
 }
