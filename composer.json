@@ -1,0 +1,60 @@
+{
+    "name": "adeshsuryan/laravel-otp-login",
+    "description": "Adds a one-time password step after Laravel login, with pluggable SMS, mail, log, and array channels.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "otp",
+        "login",
+        "2fa",
+        "sms",
+        "authentication"
+    ],
+    "authors": [
+        {
+            "name": "Adesh Kumar",
+            "email": "adeshsuryan2005@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/auth": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/contracts": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/database": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/http": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/mail": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/routing": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/session": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.40|^7.40|^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^9.6|^10.5|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "adeshsuryan\\LaravelOTPLogin\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "adeshsuryan\\LaravelOTPLogin\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "adeshsuryan\\LaravelOTPLogin\\OTPServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    }
+}

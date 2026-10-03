@@ -1,0 +1,10 @@
+/vendor/
+/node_modules/
+/.phpunit.cache/
+/phpunit.xml.bak
+composer.lock
+.DS_Store
+._*
+.env
+.phpunit.result.cache
+/proof/
