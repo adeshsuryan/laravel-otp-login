@@ -40,10 +40,11 @@ for p in pkgs:
     data["require"][p] = illuminate
 # Dev tools stay flexible on the release commit
 data["require-dev"] = {
-    "orchestra/testbench": "^6.40|^7.40|^8.0|^9.0|^10.0",
-    "phpunit/phpunit": "^9.6|^10.5|^11.0",
+    "orchestra/testbench": "^6.40|^7.40|^8.0|^9.0|^10.0|^11.0",
+    "phpunit/phpunit": "^9.6|^10.5|^11.0|^12.0",
     "phpstan/phpstan": "^1.12|^2.0",
     "larastan/larastan": "^2.9|^3.0",
+    "laravel/pint": "^1.0",
 }
 json.dump(data, open(path, "w"), indent=4)
 open(path, "a").write("\n")
@@ -55,7 +56,7 @@ restore_multi() {
 import json, sys
 path = sys.argv[1]
 data = json.load(open(path))
-illuminate = "^8.0|^9.0|^10.0|^11.0|^12.0"
+illuminate = "^8.0|^9.0|^10.0|^11.0|^12.0|^13.0"
 pkgs = [
     "illuminate/auth",
     "illuminate/contracts",
@@ -70,10 +71,11 @@ data["require"] = {"php": "^8.0"}
 for p in pkgs:
     data["require"][p] = illuminate
 data["require-dev"] = {
-    "orchestra/testbench": "^6.40|^7.40|^8.0|^9.0|^10.0",
-    "phpunit/phpunit": "^9.6|^10.5|^11.0",
+    "orchestra/testbench": "^6.40|^7.40|^8.0|^9.0|^10.0|^11.0",
+    "phpunit/phpunit": "^9.6|^10.5|^11.0|^12.0",
     "phpstan/phpstan": "^1.12|^2.0",
     "larastan/larastan": "^2.9|^3.0",
+    "laravel/pint": "^1.0",
 }
 json.dump(data, open(path, "w"), indent=4)
 open(path, "a").write("\n")
@@ -85,7 +87,8 @@ for spec in \
   "9|^8.0" \
   "10|^8.1" \
   "11|^8.2" \
-  "12|^8.2"
+  "12|^8.2" \
+  "13|^8.3"
 do
   major=${spec%%|*}
   php_req=${spec#*|}
@@ -111,4 +114,4 @@ if ! git diff --cached --quiet; then
     commit -m "chore: restore multi-major illuminate constraints on default branch"
 fi
 
-echo "Done. Push with: git push origin master && git push origin 8.0.0 9.0.0 10.0.0 11.0.0 12.0.0"
+echo "Done. Push with: git push origin master && git push origin 8.0.0 9.0.0 10.0.0 11.0.0 12.0.0 13.0.0"

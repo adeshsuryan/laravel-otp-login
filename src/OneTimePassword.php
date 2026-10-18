@@ -5,14 +5,17 @@ namespace adeshsuryan\LaravelOTPLogin;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Hash;
 
 /**
  * @property int $id
  * @property int $user_id
  * @property string $status
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class OneTimePassword extends Model
 {
@@ -23,13 +26,20 @@ class OneTimePassword extends Model
     /** @var Authenticatable|null */
     protected $otpUser;
 
+    /**
+     * @return HasMany<OneTimePasswordLog, $this>
+     */
     public function oneTimePasswordLogs()
     {
         return $this->hasMany(OneTimePasswordLog::class, 'user_id', 'user_id');
     }
 
+    /**
+     * @return BelongsTo<Model, $this>
+     */
     public function user()
     {
+        /** @var class-string<Model> $model */
         $model = config('otp.user_model') ?: $this->guessUserModel();
 
         return $this->belongsTo($model, 'user_id', config('otp.user_id_field', 'id'));
@@ -37,7 +47,7 @@ class OneTimePassword extends Model
 
     /**
      * @param  Authenticatable  $user
-     * @return array|bool|null
+     * @return array{otp: string, status: bool|null}|null
      */
     public function send($user)
     {
@@ -71,7 +81,7 @@ class OneTimePassword extends Model
      */
     private function sendOTPWithService($user, $otp, $ref)
     {
-        $factory = new ServiceFactory();
+        $factory = new ServiceFactory;
         $service = $factory->getService(config('otp.otp_default_service'));
 
         if ($service) {
@@ -107,7 +117,7 @@ class OneTimePassword extends Model
         return $otp;
     }
 
-    private function OTPGenerator()
+    private function OTPGenerator(): string
     {
         $length = max(4, min(9, (int) config('otp.otp_digit_length', 6)));
         $max = (10 ** $length) - 1;
@@ -116,7 +126,7 @@ class OneTimePassword extends Model
         return str_pad((string) random_int($min, $max), $length, '0', STR_PAD_LEFT);
     }
 
-    public function discardOldPasswords()
+    public function discardOldPasswords(): int
     {
         $this->update(['status' => 'discarded']);
 
@@ -176,7 +186,7 @@ class OneTimePassword extends Model
      * Returns true when the attempt limit is exhausted — the caller must
      * treat the OTP as invalidated and end the pending login.
      */
-    public function recordFailedAttempt()
+    public function recordFailedAttempt(): bool
     {
         $log = $this->oneTimePasswordLogs()
             ->where('status', 'waiting')
@@ -207,7 +217,7 @@ class OneTimePassword extends Model
      * code was issued — not to the parent row, which is created once per user
      * and would make every re-issued OTP instantly stale.
      */
-    public function isExpired()
+    public function isExpired(): bool
     {
         $timeout = (int) config('otp.otp_timeout', 600);
 
@@ -242,16 +252,17 @@ class OneTimePassword extends Model
             ->update(['status' => 'discarded']);
     }
 
+    /**
+     * @return class-string<Model>
+     */
     private function guessUserModel()
     {
-        if (class_exists(\App\Models\User::class)) {
-            return \App\Models\User::class;
+        foreach (['App\\Models\\User', 'App\\User'] as $model) {
+            if (class_exists($model) && is_subclass_of($model, Model::class)) {
+                return $model;
+            }
         }
 
-        if (class_exists(\App\User::class)) {
-            return \App\User::class;
-        }
-
-        return \Illuminate\Foundation\Auth\User::class;
+        return User::class;
     }
 }

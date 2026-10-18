@@ -3,6 +3,7 @@
 namespace adeshsuryan\LaravelOTPLogin\Tests;
 
 use adeshsuryan\LaravelOTPLogin\OneTimePassword;
+use adeshsuryan\LaravelOTPLogin\OneTimePasswordLog;
 use adeshsuryan\LaravelOTPLogin\Services\ArrayChannel;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
@@ -51,7 +52,7 @@ class OtpFlowTest extends TestCase
         ]);
 
         // Age the log row — expiry is anchored to the latest log entry.
-        \adeshsuryan\LaravelOTPLogin\OneTimePasswordLog::whereKey($log->id)->update([
+        OneTimePasswordLog::whereKey($log->id)->update([
             'created_at' => now()->subMinutes(5),
         ]);
 
@@ -67,8 +68,10 @@ class OtpFlowTest extends TestCase
 
     private function makeUser()
     {
-        $user = new class extends Authenticatable {
+        $user = new class extends Authenticatable
+        {
             protected $table = 'users';
+
             protected $guarded = [];
         };
 

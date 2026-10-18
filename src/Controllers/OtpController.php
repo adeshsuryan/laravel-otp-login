@@ -4,13 +4,19 @@ namespace adeshsuryan\LaravelOTPLogin\Controllers;
 
 use adeshsuryan\LaravelOTPLogin\OneTimePassword;
 use adeshsuryan\LaravelOTPLogin\TrustedDevice;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\View\View;
 
 class OtpController extends Controller
 {
+    /**
+     * @return View|RedirectResponse
+     */
     public function view(Request $request)
     {
         if (! Auth::check()) {
@@ -34,6 +40,9 @@ class OtpController extends Controller
         return view('laravel-otp-login::otpvalidate');
     }
 
+    /**
+     * @return RedirectResponse|JsonResponse
+     */
     public function check(Request $request)
     {
         if (! Auth::check()) {

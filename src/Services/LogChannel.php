@@ -16,7 +16,7 @@ class LogChannel implements ServiceInterface
         ]);
 
         // Also stash for test harnesses that read the array channel API.
-        (new ArrayChannel())->sendOneTimePassword($user, $otp, $ref);
+        (new ArrayChannel)->sendOneTimePassword($user, $otp, $ref);
 
         return true;
     }

@@ -46,3 +46,16 @@ index, and creates `otp_trusted_devices`.
 `composer require adeshsuryan/laravel-otp-login:^*.0` restores `*.0.3` code.
 The new migration's `down()` drops `otp_trusted_devices`, removes `attempts`,
 and restores the `otp_code` index.
+
+## *.1.1 — Laravel 13 line + static-analysis pass
+
+- New `13.x` line for Laravel 13 (PHP `^8.3` minimum on that line).
+- No schema changes; `otp:prune` and `*.1.0` migrations are unchanged.
+- Method signatures gained parameter/return types where they were already
+  documented (e.g. `TrustedDevice::issue($userId, int $minutes, ?...)`,
+  `OneTimePasswordMail::__construct(string $otp, string $ref)`). Callers
+  passing documented types are unaffected; subclasses must match.
+- `OTP_ENCODE_PASSWORD` uses `Hash::make`/`Hash::check` (bcrypt, ~100 ms
+  per verify). Chosen over HMAC-SHA256 because Laravel's default hasher is
+  configurable per app and bcrypt's cost factor is already tuned by the
+  framework; brute-force is separately capped by `OTP_MAX_ATTEMPTS`.

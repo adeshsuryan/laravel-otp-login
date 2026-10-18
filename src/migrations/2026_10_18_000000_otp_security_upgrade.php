@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class OtpSecurityUpgrade extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::table('one_time_password_logs', function (Blueprint $table) {
             $table->unsignedSmallInteger('attempts')->default(0)->after('status');
@@ -23,7 +23,7 @@ class OtpSecurityUpgrade extends Migration
             Schema::table('one_time_password_logs', function (Blueprint $table) {
                 $table->dropIndex(['otp_code']);
             });
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Index may not exist on installations that already removed it.
         }
 
@@ -47,7 +47,7 @@ class OtpSecurityUpgrade extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists(config('otp.trusted_devices_table', 'otp_trusted_devices'));
 

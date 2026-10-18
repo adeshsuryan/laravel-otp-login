@@ -11,7 +11,7 @@ class PruneCommand extends Command
 
     protected $description = 'Delete expired OTP trusted-device tokens and discarded OTP log rows.';
 
-    public function handle()
+    public function handle(): int
     {
         $devices = TrustedDevice::pruneExpired();
         $this->info("Pruned {$devices} expired trusted-device token(s).");

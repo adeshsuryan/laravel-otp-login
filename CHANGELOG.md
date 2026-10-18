@@ -2,6 +2,26 @@
 
 All notable changes to this package are documented in this file.
 
+## [*.1.1] - 2026-10-18 — released as 8.1.1, 9.1.1, 10.1.1, 11.1.1, 12.1.1, 13.1.1
+
+### Added
+
+- **Laravel 13 support** — new `13.x` line (`^13.0` illuminate constraints,
+  PHP `^8.3`, testbench `^11`, PHPUnit `^12`). Verified: 21/21 tests on
+  PHP 8.3 and 8.4 against Laravel 13.37.
+- Tests: mail/log channel contracts, security-migration up/down,
+  `user_model` override (21 tests / 65 assertions total).
+- CI: prefer-lowest cell, `pint --test`, PHPStan at **level 6**; Composer
+  security-blocking is opted out only for EOL Laravel cells.
+- Docker matrix lab (`test-laravel-setup/`): pinned PHP × Laravel cells,
+  11/11 PASS.
+
+### Fixed
+
+- PHPStan level 6: native/docblock types added across `src/` (kept PHP 7.3
+  syntax — no unions/`mixed` — so the Laravel 8 line still parses),
+  `guessUserModel` rewritten with `class_exists` narrowing.
+
 ## [*.1.0] - 2026-10-18 — released as 8.1.0, 9.1.0, 10.1.0, 11.1.0, 12.1.0
 
 Security hardening release on every supported line. See

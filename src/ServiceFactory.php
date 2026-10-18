@@ -17,7 +17,7 @@ class ServiceFactory
             && is_string($services[$serviceName]['class'])
             && class_exists($services[$serviceName]['class'])
         ) {
-            $service = new $services[$serviceName]['class']();
+            $service = new $services[$serviceName]['class'];
 
             return $service instanceof ServiceInterface ? $service : null;
         }

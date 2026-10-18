@@ -14,9 +14,17 @@ jobs:
       matrix:
         php: ["8.2", "8.3", "8.4"]
         framework:
-          - { laravel: "^10.0", testbench: "^8.0" }
-          - { laravel: "^11.0", testbench: "^9.0" }
-          - { laravel: "^12.0", testbench: "^10.0" }
+          # Laravel 10/11 are EOL and advisory-blocked by Composer 2.9+;
+          # they stay tested via --no-security-blocking for compat only.
+          - { laravel: "^10.0", testbench: "^8.0", phpunit: "^10.5", eol: true }
+          - { laravel: "^11.0", testbench: "^9.0", phpunit: "^11.0", eol: true }
+          - { laravel: "^12.0", testbench: "^10.0", phpunit: "^11.0", eol: false }
+          - { laravel: "^13.0", testbench: "^11.0", phpunit: "^12.0", eol: false }
+        exclude:
+          # Laravel 13 requires PHP >= 8.3; Laravel 10/11 dropped PHP 8.4
+          - { php: "8.2", framework: { laravel: "^13.0", testbench: "^11.0", phpunit: "^12.0", eol: false } }
+          - { php: "8.4", framework: { laravel: "^10.0", testbench: "^8.0", phpunit: "^10.5", eol: true } }
+          - { php: "8.4", framework: { laravel: "^11.0", testbench: "^9.0", phpunit: "^11.0", eol: true } }
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -29,9 +37,31 @@ jobs:
             "illuminate/contracts:${{ matrix.framework.laravel }}" "illuminate/database:${{ matrix.framework.laravel }}" \
             "illuminate/http:${{ matrix.framework.laravel }}" "illuminate/mail:${{ matrix.framework.laravel }}" \
             "illuminate/routing:${{ matrix.framework.laravel }}" "illuminate/session:${{ matrix.framework.laravel }}" \
-            "illuminate/support:${{ matrix.framework.laravel }}" "orchestra/testbench:${{ matrix.framework.testbench }}"
+            "illuminate/support:${{ matrix.framework.laravel }}" "orchestra/testbench:${{ matrix.framework.testbench }}" \
+            "phpunit/phpunit:${{ matrix.framework.phpunit }}"
       - name: Install dependencies
-        run: composer update --prefer-dist --no-interaction
+        # EOL Laravel lines are blocked by Composer 2.9 security blocking;
+        # opt out only for those cells (compat proof, not a security stance).
+        run: composer update --prefer-dist --no-interaction ${{ matrix.framework.eol && '--no-security-blocking' || '' }}
+      - name: Tests
+        run: composer test
+
+  test-lowest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          coverage: none
+      - name: Resolve Laravel 12 baseline
+        run: |
+          composer require --no-update "illuminate/auth:^12.0" "illuminate/contracts:^12.0" \
+            "illuminate/database:^12.0" "illuminate/http:^12.0" "illuminate/mail:^12.0" \
+            "illuminate/routing:^12.0" "illuminate/session:^12.0" "illuminate/support:^12.0" \
+            "orchestra/testbench:^10.0" "phpunit/phpunit:^11.0"
+      - name: Install lowest allowed deps
+        run: composer update --prefer-lowest --prefer-stable --no-interaction --no-security-blocking
       - name: Tests
         run: composer test
 
@@ -45,5 +75,7 @@ jobs:
       - run: composer update --prefer-dist --no-interaction
       - name: Composer audit
         run: composer audit
-      - name: PHPStan
+      - name: PHPStan (level 6)
         run: vendor/bin/phpstan analyse --no-progress
+      - name: Pint (dry-run)
+        run: vendor/bin/pint --test

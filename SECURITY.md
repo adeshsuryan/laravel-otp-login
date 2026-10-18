@@ -12,6 +12,7 @@ where the framework itself receives security fixes.
 
 | Package line | Laravel | Security status |
 | --- | --- | --- |
+| `13.x` | 13.x | **Supported** |
 | `12.x` | 12.x | **Supported** |
 | `11.x` | 11.x | Package fixes ship; **Laravel 11 is EOL** — upgrade the framework |
 | `10.x` | 10.x | Package fixes ship; **Laravel 10 is EOL** — upgrade the framework |

@@ -8,6 +8,7 @@ use adeshsuryan\LaravelOTPLogin\OneTimePasswordLog;
 use adeshsuryan\LaravelOTPLogin\Services\ArrayChannel;
 use adeshsuryan\LaravelOTPLogin\TrustedDevice;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
@@ -83,7 +84,7 @@ class OtpSecurityTest extends TestCase
 
         $this->assertNotNull($cookie, 'verified cookie must be set');
         // The web group encrypts the cookie — decrypt to inspect the value.
-        $value = \Illuminate\Support\Facades\Crypt::decryptString($cookie->getValue());
+        $value = Crypt::decryptString($cookie->getValue());
         $this->assertStringNotContainsString('user_id_', $value);
         $this->assertStringContainsString('|', $value);
         $this->assertSame(1, TrustedDevice::where('user_id', $user->id)->count());
@@ -221,8 +222,10 @@ class OtpSecurityTest extends TestCase
 
     private function makeUser()
     {
-        $user = new class extends Authenticatable {
+        $user = new class extends Authenticatable
+        {
             protected $table = 'users';
+
             protected $guarded = [];
         };
 

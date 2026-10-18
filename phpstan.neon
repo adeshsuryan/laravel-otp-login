@@ -2,7 +2,7 @@ includes:
     - vendor/larastan/larastan/extension.neon
 
 parameters:
-    level: 5
+    level: 6
     paths:
         - src
     treatPhpDocTypesAsCertain: false
@@ -17,3 +17,9 @@ parameters:
           path: src/Controllers/OtpController.php
         - identifier: argument.type
           path: src/Mail/OneTimePasswordMail.php
+        # Host-app fallbacks: App\Models\User / App\User exist only inside a
+        # consumer app; inside the package scope they can never exist.
+        - identifier: function.impossibleType
+          path: src/OneTimePassword.php
+        - identifier: function.alreadyNarrowedType
+          path: src/OneTimePassword.php

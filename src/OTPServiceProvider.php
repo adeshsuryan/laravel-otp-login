@@ -8,12 +8,12 @@ use Illuminate\Support\ServiceProvider;
 
 class OTPServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/config/config.php', 'otp');
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__.'/migrations');
         $this->loadRoutesFrom(__DIR__.'/routes/routes.php');

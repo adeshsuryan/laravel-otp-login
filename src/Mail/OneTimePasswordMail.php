@@ -17,12 +17,15 @@ class OneTimePasswordMail extends Mailable
     /** @var string */
     public $ref;
 
-    public function __construct($otp, $ref)
+    public function __construct(string $otp, string $ref)
     {
         $this->otp = (string) $otp;
         $this->ref = (string) $ref;
     }
 
+    /**
+     * @return $this
+     */
     public function build()
     {
         $message = __('laravel-otp-login::messages.otp_message', ['password' => $this->otp]);

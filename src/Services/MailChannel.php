@@ -27,7 +27,7 @@ class MailChannel implements ServiceInterface
                 Mail::to($email)->send($mailable);
             }
 
-            (new ArrayChannel())->sendOneTimePassword($user, $otp, $ref);
+            (new ArrayChannel)->sendOneTimePassword($user, $otp, $ref);
 
             return true;
         } catch (\Throwable $e) {

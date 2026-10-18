@@ -28,7 +28,12 @@ class TrustedDevice extends Model
      * Issue a new trusted-device token for the user.
      * Returns the cookie value "user_id|token" — raw token is never persisted.
      */
-    public static function issue($userId, $minutes, $agent = null)
+    /**
+     * @param  int|string  $userId
+     * @param  string|null  $agent
+     * @return string "user_id|token"
+     */
+    public static function issue($userId, int $minutes, $agent = null)
     {
         $token = Str::random(64);
 
@@ -45,7 +50,10 @@ class TrustedDevice extends Model
     /**
      * Validate a "user_id|token" cookie value against stored hashes.
      */
-    public static function isTrusted($cookieValue, $userId = null)
+    /**
+     * @param  int|string|null  $userId
+     */
+    public static function isTrusted(?string $cookieValue, $userId = null): bool
     {
         if (! is_string($cookieValue) || strpos($cookieValue, '|') === false) {
             return false;
@@ -67,7 +75,7 @@ class TrustedDevice extends Model
     }
 
     /** Remove expired rows. */
-    public static function pruneExpired()
+    public static function pruneExpired(): int
     {
         return static::query()->where('expires_at', '<=', now())->delete();
     }

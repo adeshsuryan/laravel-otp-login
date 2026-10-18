@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateOtpTable extends Migration
 {
-    public function up()
+    public function up(): void
     {
         $userTable = config('otp.user_table', 'users');
 
@@ -25,7 +25,7 @@ class CreateOtpTable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('one_time_passwords');
     }

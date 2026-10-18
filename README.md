@@ -13,11 +13,12 @@ GitHub: [adeshsuryan/laravel-otp-login](https://github.com/adeshsuryan/laravel-o
 
 | Laravel | Package constraint | PHP | Status |
 | --- | --- | --- | --- |
-| 12.x | `adeshsuryan/laravel-otp-login:^12.0` | ^8.2 | **supported** — latest is `12.1.0` |
-| 11.x | `adeshsuryan/laravel-otp-login:^11.0` | ^8.2 | security fixes shipped in `11.1.0`; Laravel 11 itself is EOL — Composer's advisory policy may block it; upgrade Laravel |
-| 10.x | `adeshsuryan/laravel-otp-login:^10.0` | ^8.1 | security fixes shipped in `10.1.0`; Laravel 10 is EOL — upgrade |
-| 9.x | `adeshsuryan/laravel-otp-login:^9.0` | ^8.0 | security fixes shipped in `9.1.0`; Laravel 9 and PHP 8.0 are EOL — upgrade |
-| 8.x | `adeshsuryan/laravel-otp-login:^8.0` | ^7.3\|^8.0 | security fixes shipped in `8.1.0`; Laravel 8 and PHP ≤8.1 are EOL — upgrade |
+| 13.x | `adeshsuryan/laravel-otp-login:^13.0` | ^8.3 | **supported** — latest is `13.1.1` |
+| 12.x | `adeshsuryan/laravel-otp-login:^12.0` | ^8.2 | **supported** — latest is `12.1.1` |
+| 11.x | `adeshsuryan/laravel-otp-login:^11.0` | ^8.2 | security fixes shipped in `11.1.1`; Laravel 11 itself is EOL — Composer's advisory policy may block it; upgrade Laravel |
+| 10.x | `adeshsuryan/laravel-otp-login:^10.0` | ^8.1 | security fixes shipped in `10.1.1`; Laravel 10 is EOL — upgrade |
+| 9.x | `adeshsuryan/laravel-otp-login:^9.0` | ^8.0 | security fixes shipped in `9.1.1`; Laravel 9 and PHP 8.0 are EOL — upgrade |
+| 8.x | `adeshsuryan/laravel-otp-login:^8.0` | ^7.3\|^8.0 | security fixes shipped in `8.1.1`; Laravel 8 and PHP ≤8.1 are EOL — upgrade |
 | 5.x | `adeshsuryan/laravel-otp-login:5.13` (or `5.8`, …) | historical | **frozen** |
 
 > EOL note: Composer's default `policy.advisories.block` now refuses to install
@@ -35,7 +36,7 @@ composer require adeshsuryan/laravel-otp-login:5.13
 
 Tags `0.1`–`5.13` are immutable historical releases for older Laravel 5-era apps.
 
-## Install (Laravel 8–12)
+## Install (Laravel 8–13)
 
 ```bash
 composer require adeshsuryan/laravel-otp-login:^12.0
