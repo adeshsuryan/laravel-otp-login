@@ -8,5 +8,5 @@ class OneTimePasswordLog extends Model
 {
     protected $table = 'one_time_password_logs';
 
-    protected $fillable = ['user_id', 'otp_code', 'status', 'refer_number'];
+    protected $fillable = ['user_id', 'otp_code', 'status', 'refer_number', 'attempts'];
 }

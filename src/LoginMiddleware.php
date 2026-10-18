@@ -32,9 +32,8 @@ class LoginMiddleware
         $user = Auth::user();
         $userId = $user->{config('otp.user_id_field', 'id')};
         $cookieName = config('otp.verified_cookie_name', 'otp_login_verified');
-        $expected = 'user_id_'.$userId;
 
-        if ($request->cookie($cookieName) === $expected) {
+        if (TrustedDevice::isTrusted($request->cookie($cookieName), $userId)) {
             return $next($request);
         }
 
@@ -58,6 +57,21 @@ class LoginMiddleware
             return redirect()->route('otp.view');
         }
 
-        return $next($request);
+        // Legacy migration path for hosts that intentionally admit users who
+        // never received an OTP. Off by default: an auth gate must fail closed.
+        if (config('otp.fail_open', false)) {
+            return $next($request);
+        }
+
+        $row = $waiting instanceof OneTimePassword
+            ? $waiting
+            : OneTimePassword::firstOrCreate(
+                ['user_id' => $userId],
+                ['status' => 'waiting']
+            );
+
+        $row->send($user);
+
+        return redirect()->route('otp.view');
     }
 }

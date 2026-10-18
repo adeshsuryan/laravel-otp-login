@@ -2,6 +2,7 @@
 
 namespace adeshsuryan\LaravelOTPLogin;
 
+use adeshsuryan\LaravelOTPLogin\Console\PruneCommand;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
@@ -42,5 +43,9 @@ class OTPServiceProvider extends ServiceProvider
         /** @var Router $router */
         $router = $this->app->make('router');
         $router->aliasMiddleware('otp.verified', LoginMiddleware::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([PruneCommand::class]);
+        }
     }
 }

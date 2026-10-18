@@ -3,6 +3,7 @@
 namespace adeshsuryan\LaravelOTPLogin\Controllers;
 
 use adeshsuryan\LaravelOTPLogin\OneTimePassword;
+use adeshsuryan\LaravelOTPLogin\TrustedDevice;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -39,11 +40,10 @@ class OtpController extends Controller
             return redirect()->route(config('otp.login_route', 'login'));
         }
 
-        $code = $request->input('code');
-        if ($code === null || $code === '') {
-            return redirect()->route('otp.view')
-                ->withErrors(['code' => __('laravel-otp-login::messages.code_missing')]);
-        }
+        $validated = $request->validate([
+            'code' => 'required|string|digits_between:4,9',
+        ]);
+        $code = $validated['code'];
 
         $user = Auth::user();
         $otp = OneTimePassword::query()
@@ -60,6 +60,13 @@ class OtpController extends Controller
         }
 
         if (! $otp->checkPassword((string) $code)) {
+            if ($otp->recordFailedAttempt()) {
+                Auth::logout();
+
+                return redirect()->route(config('otp.login_route', 'login'))
+                    ->withErrors(['email' => __('laravel-otp-login::messages.too_many_attempts')]);
+            }
+
             return redirect()->route('otp.view')
                 ->withErrors(['code' => __('laravel-otp-login::messages.code_mismatch')]);
         }
@@ -68,7 +75,8 @@ class OtpController extends Controller
 
         $cookieName = config('otp.verified_cookie_name', 'otp_login_verified');
         $minutes = (int) config('otp.verified_cookie_minutes', 60 * 24 * 30);
-        $value = 'user_id_'.$user->{config('otp.user_id_field', 'id')};
+        $userId = $user->{config('otp.user_id_field', 'id')};
+        $value = TrustedDevice::issue($userId, $minutes, $request->userAgent());
 
         Cookie::queue(cookie(
             $cookieName,

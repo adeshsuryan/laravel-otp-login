@@ -8,6 +8,7 @@
     "unauthorized" => "Bu işlemi gerçekleştirebilmek için yetkiniz yok.",
     "code_missing" => "Şifre alanı boş gönderilemez.",
     "code_mismatch" => "Şifreniz sistemimize kayıtlı şifre ile uyuşmuyor. Lütfen kontrol edip size gönderilen kodu tekrar giriniz.",
+    "too_many_attempts" => "Çok fazla hatalı deneme. Yeni bir OTP kodu almak için lütfen tekrar giriş yapın.",
     "otp_message" => "Sisteme giris yapabilmeniz için tek kullanimlik sifreniz: :password",
     "otp_not_received" => "Şifreniz gelmedi mi? Çıkış yapıp tekrar deneyin!",
     "service_not_responding" => "SMS servisi şu an çalışmıyor gibi görünüyor. Lütfen tekrar deneyiniz."

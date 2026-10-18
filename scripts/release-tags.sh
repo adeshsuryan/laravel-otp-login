@@ -1,7 +1,11 @@
 #!/bin/sh
-# Create annotated tags 8.0.0–12.0.0 with illuminate constraints for that Laravel major.
-# Does not modify or delete tags 0.1–5.13.
+# Create annotated tags <major>.<MINOR>.<PATCH> with illuminate constraints
+# for that Laravel major. Defaults to .1.0. Does not modify or delete
+# tags 0.1-5.13 or earlier modern tags.
 set -eu
+
+MINOR=${MINOR:-1}
+PATCH=${PATCH:-0}
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
@@ -38,6 +42,8 @@ for p in pkgs:
 data["require-dev"] = {
     "orchestra/testbench": "^6.40|^7.40|^8.0|^9.0|^10.0",
     "phpunit/phpunit": "^9.6|^10.5|^11.0",
+    "phpstan/phpstan": "^1.12|^2.0",
+    "larastan/larastan": "^2.9|^3.0",
 }
 json.dump(data, open(path, "w"), indent=4)
 open(path, "a").write("\n")
@@ -66,6 +72,8 @@ for p in pkgs:
 data["require-dev"] = {
     "orchestra/testbench": "^6.40|^7.40|^8.0|^9.0|^10.0",
     "phpunit/phpunit": "^9.6|^10.5|^11.0",
+    "phpstan/phpstan": "^1.12|^2.0",
+    "larastan/larastan": "^2.9|^3.0",
 }
 json.dump(data, open(path, "w"), indent=4)
 open(path, "a").write("\n")
@@ -81,15 +89,15 @@ for spec in \
 do
   major=${spec%%|*}
   php_req=${spec#*|}
-  tag="${major}.0.0"
+  tag="${major}.${MINOR}.${PATCH}"
   if git rev-parse "$tag" >/dev/null 2>&1; then
-    echo "Tag $tag already exists — skip"
+    echo "Tag $tag already exists ï¿½ skip"
     continue
   fi
   git checkout -B "release/${tag}" "$BASE"
   write_composer "$major" "$php_req"
   git add composer.json
-  git -c user.name="Adesh Suryan" -c user.email="887994+adeshsuryan@users.noreply.github.com" \
+  git -c user.name="Adesh Suryan" -c user.email="adeshsuryan2005@gmail.com" \
     commit -m "release: ${tag} for Laravel ${major}"
   git tag -a "$tag" -m "Laravel OTP login ${tag} (Laravel ${major})"
   echo "Created $tag"
@@ -99,7 +107,7 @@ git checkout master 2>/dev/null || git checkout main
 restore_multi
 git add composer.json
 if ! git diff --cached --quiet; then
-  git -c user.name="Adesh Suryan" -c user.email="887994+adeshsuryan@users.noreply.github.com" \
+  git -c user.name="Adesh Suryan" -c user.email="adeshsuryan2005@gmail.com" \
     commit -m "chore: restore multi-major illuminate constraints on default branch"
 fi
 

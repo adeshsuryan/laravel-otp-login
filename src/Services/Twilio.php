@@ -22,7 +22,7 @@ class Twilio implements ServiceInterface
         try {
             $url = 'https://api.twilio.com/2010-04-01/Accounts/'.$sid.'/Messages.json';
             $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, [
                 'Body' => $message,
                 'From' => $from,
@@ -30,6 +30,8 @@ class Twilio implements ServiceInterface
             ]);
             curl_setopt($ch, CURLOPT_USERPWD, $sid.':'.$token);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
             $response = curl_exec($ch);
             curl_close($ch);
 

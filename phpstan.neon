@@ -1,0 +1,19 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # env() is correct inside the package's own config file — Larastan's
+        # "outside config dir" rule only exempts the host app's config/.
+        - identifier: larastan.noEnvCallsOutsideOfConfig
+          path: src/config/config.php
+        # Package-namespaced views resolve at runtime via loadViewsFrom;
+        # Larastan's view-string type cannot see them from src/.
+        - identifier: argument.type
+          path: src/Controllers/OtpController.php
+        - identifier: argument.type
+          path: src/Mail/OneTimePasswordMail.php

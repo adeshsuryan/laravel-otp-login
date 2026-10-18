@@ -7,6 +7,13 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $status
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
 class OneTimePassword extends Model
 {
     protected $table = 'one_time_passwords';
@@ -164,13 +171,58 @@ class OneTimePassword extends Model
             ->update(['status' => 'verified']);
     }
 
+    /**
+     * Record a wrong-code attempt against the current waiting log.
+     * Returns true when the attempt limit is exhausted — the caller must
+     * treat the OTP as invalidated and end the pending login.
+     */
+    public function recordFailedAttempt()
+    {
+        $log = $this->oneTimePasswordLogs()
+            ->where('status', 'waiting')
+            ->orderByDesc('id')
+            ->first();
+
+        if (! $log) {
+            return true;
+        }
+
+        $attempts = (int) $log->attempts + 1;
+        $max = max(1, (int) config('otp.max_attempts', 5));
+
+        if ($attempts >= $max) {
+            $log->update(['attempts' => $attempts, 'status' => 'discarded']);
+            $this->update(['status' => 'discarded']);
+
+            return true;
+        }
+
+        $log->update(['attempts' => $attempts]);
+
+        return false;
+    }
+
+    /**
+     * Expiry is anchored to the newest OTP log entry — i.e. when the current
+     * code was issued — not to the parent row, which is created once per user
+     * and would make every re-issued OTP instantly stale.
+     */
     public function isExpired()
     {
         $timeout = (int) config('otp.otp_timeout', 600);
 
-        return $this->created_at instanceof Carbon
-            ? $this->created_at->lt(Carbon::now()->subSeconds($timeout))
-            : Carbon::parse($this->created_at)->lt(Carbon::now()->subSeconds($timeout));
+        $latest = $this->oneTimePasswordLogs()->orderByDesc('id')->first();
+        $anchor = $latest !== null && $latest->created_at !== null
+            ? $latest->created_at
+            : $this->created_at;
+
+        if ($anchor === null) {
+            return true;
+        }
+
+        return $anchor instanceof Carbon
+            ? $anchor->lt(Carbon::now()->subSeconds($timeout))
+            : Carbon::parse($anchor)->lt(Carbon::now()->subSeconds($timeout));
     }
 
     /**

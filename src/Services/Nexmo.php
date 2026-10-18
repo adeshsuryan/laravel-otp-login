@@ -29,6 +29,8 @@ class Nexmo implements ServiceInterface
             ]);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
             $response = curl_exec($ch);
             curl_close($ch);
             $decoded = json_decode((string) $response, true);

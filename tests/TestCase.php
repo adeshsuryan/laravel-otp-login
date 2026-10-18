@@ -43,4 +43,10 @@ abstract class TestCase extends Orchestra
 
         $this->loadMigrationsFrom(__DIR__.'/../src/migrations');
     }
+
+    protected function defineRoutes($router)
+    {
+        $router->get('/login', fn () => 'login-page')->name('login');
+        $router->get('/home', fn () => 'home')->name('home');
+    }
 }

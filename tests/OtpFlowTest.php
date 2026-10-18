@@ -35,6 +35,7 @@ class OtpFlowTest extends TestCase
     {
         $user = $this->makeUser();
         config()->set('otp.otp_timeout', 1);
+        config()->set('otp.encode_password', false);
 
         $record = OneTimePassword::create([
             'user_id' => $user->id,
@@ -42,11 +43,16 @@ class OtpFlowTest extends TestCase
         ]);
 
         $otp = '123456';
-        $record->oneTimePasswordLogs()->create([
+        $log = $record->oneTimePasswordLogs()->create([
             'user_id' => $user->id,
             'otp_code' => $otp,
             'refer_number' => '15551234567',
             'status' => 'waiting',
+        ]);
+
+        // Age the log row — expiry is anchored to the latest log entry.
+        \adeshsuryan\LaravelOTPLogin\OneTimePasswordLog::whereKey($log->id)->update([
+            'created_at' => now()->subMinutes(5),
         ]);
 
         OneTimePassword::whereKey($record->id)->update([
